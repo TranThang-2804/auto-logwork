@@ -35,19 +35,19 @@ func execute() {
 		fmt.Println("Endpoint type not supported")
 	}
 
-	tickets, err := projectTracking.GetTicketToLog(config)
+	tickets, err := projectTracking.GetTicketToLog()
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
-	dayToLog, err := projectTracking.GetDayToLog(config)
+	dayToLog, err := projectTracking.GetDayToLog()
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
-	err = projectTracking.LogWork(config, tickets, dayToLog)
+	err = projectTracking.LogWork(tickets, dayToLog)
 	if err != nil {
 		fmt.Println(err)
 		return
