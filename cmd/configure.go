@@ -45,10 +45,13 @@ func configureConfig() error {
 
 	fmt.Print("Enter type: ")
 	endpointType, _ := reader.ReadString('\n')
+	endpointType = endpointType[:len(endpointType)-1]
 	fmt.Print("Enter endpoint: ")
 	endpoint, _ := reader.ReadString('\n')
+	endpoint = endpoint[:len(endpoint)-1]
 	fmt.Print("Enter credentials: ")
 	credential, _ := reader.ReadString('\n')
+	credential = credential[:len(credential)-1]
 
 	config := &types.Config{
 		EndpointType: endpointType,
@@ -62,6 +65,7 @@ func configureConfig() error {
 }
 
 func init() {
+	cobra.OnInitialize(internal.ReadConfig)
 	rootCmd.AddCommand(configureCmd)
 
 	// Here you will define your flags and configuration settings.

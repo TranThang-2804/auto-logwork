@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"os"
@@ -22,22 +23,34 @@ func CheckConfigExist() (bool, error) {
 	}
 }
 
-func ReadConfig() error {
+func ReadConfig() {
 	configFileExist, _ := CheckConfigExist()
 
 	if configFileExist {
-		fileByte, err := os.ReadFile(GetConfigFilePath())
+		file, err := os.Open(GetConfigFilePath())
+    defer file.Close()
 
 		if err != nil {
-			return err
+      log.Print(err)
+			return
 		}
+    
+    decoder := json.NewDecoder(file)
+    config := types.Config{}
 
-		fmt.Printf("fileByte: %v\n", fileByte)
+    err = decoder.Decode(&config)
+
+    fmt.Println(config)
+
+    if err != nil {
+      log.Print(err)
+      return
+    }
+
 	} else {
 		log.Print("You haven't config credentials, to config, run: auto-logwork configure")
+    return
 	}
-
-	return nil
 }
 
 func WriteConfig(config *types.Config) error {
@@ -49,7 +62,8 @@ func WriteConfig(config *types.Config) error {
 
 	defer file.Close()
 
-	_, err = file.WriteString(fmt.Sprintf("Credential: %sEndpoint: %sEndpointType: %s", config.Credential, config.Endpoint, config.EndpointType))
+  encoder := json.NewEncoder(file)
+  err = encoder.Encode(config)
 
 	return err
 }
