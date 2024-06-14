@@ -17,11 +17,16 @@ func CheckConfigExist() (bool, error) {
 	}
 }
 
+func GetConfigFilePath() string {
+  homeDir := os.Getenv("HOME")
+  return homeDir + "/" + constant.ConfigFile
+}
+
 func ReadConfig() error {
 	configFileExist, _ := CheckConfigExist()
 
 	if configFileExist {
-		fileByte, err := os.ReadFile(constant.ConfigFile)
+		fileByte, err := os.ReadFile(GetConfigFilePath())
 
 		if err != nil {
 			return err
@@ -36,7 +41,7 @@ func ReadConfig() error {
 }
 
 func WriteConfig(config *types.Config) error {
-	file, err := os.Create(constant.ConfigFile)
+	file, err := os.Create(GetConfigFilePath())
 
 	if err != nil {
 		return err
@@ -44,7 +49,7 @@ func WriteConfig(config *types.Config) error {
 
 	defer file.Close()
 
-	_, err = file.WriteString(fmt.Sprintf("Credential: %s\nEndpoint: %s\nEndpointType: %s\n", config.Credential, config.Endpoint, config.EndpointType))
+	_, err = file.WriteString(fmt.Sprintf("Credential: %sEndpoint: %sEndpointType: %s", config.Credential, config.Endpoint, config.EndpointType))
 
 	return err
 }

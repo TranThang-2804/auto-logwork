@@ -1,3 +1,3 @@
 package constant
 
-const ConfigFile = "~/.auto-logwork.conf"
+const ConfigFile = ".auto-logwork.conf"
