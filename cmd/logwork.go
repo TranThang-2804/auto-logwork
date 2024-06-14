@@ -6,6 +6,9 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/TranThang-2804/auto-logwork/cmd/internal/configure"
+	"github.com/TranThang-2804/auto-logwork/cmd/internal/logwork"
+	"github.com/TranThang-2804/auto-logwork/pkg/types"
 	"github.com/spf13/cobra"
 )
 
@@ -15,8 +18,35 @@ var logworkCmd = &cobra.Command{
 	Short: "Auto logwork",
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("logwork called")
+	  execute()	
 	},
+}
+
+func execute() {
+  config := &types.Config{}
+  configure.ReadConfig(config)
+
+  var projectTracking logwork.ProjectTracking
+
+  switch config.EndpointType { 
+  case "jira":
+    projectTracking = logwork.NewJira(config.Endpoint, config.Credential)
+  default:
+    fmt.Println("Endpoint type not supported")
+  }
+  
+  tickets, err := projectTracking.GetAllTicket()
+  if err != nil {
+    fmt.Println(err)
+    return
+  }
+
+  dayToLog, err := projectTracking.GetDayToLog()
+  if err != nil { 
+    fmt.Println(err)
+    return
+  }
+
 }
 
 func init() {

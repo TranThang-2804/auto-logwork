@@ -1,8 +1,7 @@
-package internal
+package configure
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"os"
 
@@ -23,7 +22,7 @@ func CheckConfigExist() (bool, error) {
 	}
 }
 
-func ReadConfig() {
+func ReadConfig(config *types.Config) {
 	configFileExist, _ := CheckConfigExist()
 
 	if configFileExist {
@@ -36,11 +35,8 @@ func ReadConfig() {
 		}
     
     decoder := json.NewDecoder(file)
-    config := types.Config{}
 
     err = decoder.Decode(&config)
-
-    fmt.Println(config)
 
     if err != nil {
       log.Print(err)

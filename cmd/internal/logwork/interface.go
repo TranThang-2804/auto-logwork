@@ -1,6 +1,6 @@
 package logwork
 
-type Logwork interface {
+type ProjectTracking interface {
   GetAllTicket() ([]Ticket, error)
   GetDayTolog() (string, error)
   LogWork(ticket Ticket) error

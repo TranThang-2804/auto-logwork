@@ -10,7 +10,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/TranThang-2804/auto-logwork/cmd/internal"
+	"github.com/TranThang-2804/auto-logwork/cmd/internal/configure"
 	"github.com/TranThang-2804/auto-logwork/pkg/types"
 	"github.com/spf13/cobra"
 )
@@ -26,7 +26,7 @@ var configureCmd = &cobra.Command{
 }
 
 func configureConfig() error {
-	configFileExist, _ := internal.CheckConfigExist()
+	configFileExist, _ := configure.CheckConfigExist()
 
 	reader := bufio.NewReader(os.Stdin)
 
@@ -59,13 +59,12 @@ func configureConfig() error {
 		Credential:   credential,
 	}
 
-	err := internal.WriteConfig(config)
+	err := configure.WriteConfig(config)
 
 	return err
 }
 
 func init() {
-	cobra.OnInitialize(internal.ReadConfig)
 	rootCmd.AddCommand(configureCmd)
 
 	// Here you will define your flags and configuration settings.
