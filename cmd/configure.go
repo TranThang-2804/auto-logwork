@@ -1,14 +1,14 @@
 /*
 Copyright © 2024 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
 import (
 	"fmt"
+	"log"
 
+	"github.com/TranThang-2804/auto-logwork/cmd/internal"
 	"github.com/spf13/cobra"
-  "github.com/TranThang-2804/auto-logwork/cmd/internal/configuration"
 )
 
 // configureCmd represents the configure command
@@ -22,9 +22,9 @@ var configureCmd = &cobra.Command{
 }
 
 func configureConfig() error {
-  configFileExist, err = CheckConfigExist()
+  configFileExist, err := internal.CheckConfigExist()
 
-  if err != null {
+  if err != nil {
     log.Fatal(err)
     return err
   }
