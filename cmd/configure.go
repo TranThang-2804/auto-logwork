@@ -17,7 +17,7 @@ var configureCmd = &cobra.Command{
 	Short: "config your credentials and tool's endpoint",
 	Long: ``,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("configure called")
+    configureConfig()
 	},
 }
 
