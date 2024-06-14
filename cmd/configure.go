@@ -8,6 +8,7 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
+  "github.com/TranThang-2804/auto-logwork/internal/configuration"
 )
 
 // configureCmd represents the configure command
@@ -18,6 +19,21 @@ var configureCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("configure called")
 	},
+}
+
+func configureConfig() error {
+  configFileExist, err = CheckConfigExist()
+
+  if err != null {
+    log.Fatal(err)
+    return err
+  }
+
+  if (configFileExist) {
+    fmt.Println("Configuration Exists, Overwrite? [y/n]")
+  }
+  
+  return nil
 }
 
 func init() {
@@ -31,5 +47,5 @@ func init() {
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	configureCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// configureCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
