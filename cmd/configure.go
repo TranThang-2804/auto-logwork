@@ -5,7 +5,9 @@ package cmd
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
+	"log"
 	"os"
 
 	"github.com/TranThang-2804/auto-logwork/cmd/internal"
@@ -26,11 +28,20 @@ var configureCmd = &cobra.Command{
 func configureConfig() error {
 	configFileExist, _ := internal.CheckConfigExist()
 
+	reader := bufio.NewReader(os.Stdin)
+
 	if configFileExist {
-		fmt.Println("Configuration Exists, Overwrite? [y/n]")
+    fmt.Print("Configuration Exists, Overwrite? [y/n]: ")
+    overwrite, _ := reader.ReadString('\n')
+
+    if overwrite == "n" {
+      return nil
+    } else if overwrite != "y" {
+      log.Println("Invalid input")
+      return errors.New("Invalid input")
+    }
 	}
 
-	reader := bufio.NewReader(os.Stdin)
 	fmt.Print("Enter type: ")
 	endpointType, _ := reader.ReadString('\n')
 	fmt.Print("Enter endpoint: ")

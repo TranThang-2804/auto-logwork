@@ -9,17 +9,17 @@ import (
 	"github.com/TranThang-2804/auto-logwork/pkg/types"
 )
 
+func GetConfigFilePath() string {
+	homeDir := os.Getenv("HOME")
+	return homeDir + "/" + constant.ConfigFile
+}
+
 func CheckConfigExist() (bool, error) {
-	if _, err := os.Stat(constant.ConfigFile); err == nil {
+	if _, err := os.Stat(GetConfigFilePath()); err == nil {
 		return true, err
 	} else {
 		return false, err
 	}
-}
-
-func GetConfigFilePath() string {
-	homeDir := os.Getenv("HOME")
-	return homeDir + "/" + constant.ConfigFile
 }
 
 func ReadConfig() error {
