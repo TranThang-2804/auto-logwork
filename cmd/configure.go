@@ -31,15 +31,16 @@ func configureConfig() error {
 	reader := bufio.NewReader(os.Stdin)
 
 	if configFileExist {
-    fmt.Print("Configuration Exists, Overwrite? [y/n]: ")
-    overwrite, _ := reader.ReadString('\n')
+		fmt.Print("Configuration Exists, Overwrite? [y/n]: ")
+		overwrite, _ := reader.ReadString('\n')
+		overwrite = overwrite[:len(overwrite)-1]
 
-    if overwrite == "n" {
-      return nil
-    } else if overwrite != "y" {
-      log.Println("Invalid input")
-      return errors.New("Invalid input")
-    }
+		if overwrite == "n" {
+			return nil
+		} else if overwrite != "y" {
+			log.Println("Invalid input")
+			return errors.New("Invalid input, valid input are y/n")
+		}
 	}
 
 	fmt.Print("Enter type: ")
