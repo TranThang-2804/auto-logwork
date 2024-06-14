@@ -5,7 +5,6 @@ import (
 	"log"
 	"time"
 
-	"github.com/TranThang-2804/auto-logwork/pkg/types"
 	"github.com/andygrunwald/go-jira"
 )
 
