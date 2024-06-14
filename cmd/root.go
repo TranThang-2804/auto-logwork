@@ -32,9 +32,7 @@ var rootCmd = &cobra.Command{
 	Use:   "auto-logwork",
 	Short: "Auto logwork so you don't have to do it",
 	Long: `
-    To auto-logwork, run:
-      configure: to config credentials and the tools 
-      logwork: to start auto logwork
+Developed by Tommy
   `,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:

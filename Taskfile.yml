@@ -1,0 +1,9 @@
+version: '3'
+
+tasks:
+  rebuild:
+    cmds:
+      - echo 'Building!'
+      - go build -o test
+      - echo 'Installing'
+      - go install test
