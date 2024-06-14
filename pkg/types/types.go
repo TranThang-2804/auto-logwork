@@ -1,7 +1,8 @@
 package types
 
 type Config struct {
-	Credential   string
+	Username     string
+	ApiToken     string
 	Endpoint     string
 	EndpointType string
 }

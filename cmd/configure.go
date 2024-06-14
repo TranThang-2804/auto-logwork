@@ -49,14 +49,18 @@ func configureConfig() error {
 	fmt.Print("Enter endpoint: ")
 	endpoint, _ := reader.ReadString('\n')
 	endpoint = endpoint[:len(endpoint)-1]
-	fmt.Print("Enter credentials: ")
-	credential, _ := reader.ReadString('\n')
-	credential = credential[:len(credential)-1]
+	fmt.Print("Enter username/email: ")
+	userName, _ := reader.ReadString('\n')
+	userName = userName[:len(userName)-1]
+	fmt.Print("Enter api token: ")
+	apiToken, _ := reader.ReadString('\n')
+	apiToken = apiToken[:len(apiToken)-1]
 
 	config := &types.Config{
 		EndpointType: endpointType,
 		Endpoint:     endpoint,
-		Credential:   credential,
+		Username:     userName,
+		ApiToken:     apiToken,
 	}
 
 	err := configure.WriteConfig(config)

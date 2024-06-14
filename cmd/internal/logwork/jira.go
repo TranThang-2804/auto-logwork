@@ -9,35 +9,32 @@ import (
 )
 
 type Jira struct {
-	endpoint   string
-	credential string
+	endpoint string
+	userName string
+	apiToken string
 }
 
-func NewJira(endpoint string, credential string) *Jira {
+func NewJira(endpoint string, userName string, apiToken string) *Jira {
 	return &Jira{
 		endpoint:   endpoint,
-		credential: credential,
+    userName:   userName,
+    apiToken:   apiToken,
 	}
 }
 
 func (j *Jira) GetTicketToLog() ([]Ticket, error) {
-	// Replace with your JIRA domain, username, and API token
-	jiraDomain := "https://your-jira-domain.atlassian.net"
-	username := "your-email@example.com"
-	apiToken := "your-api-token"
-
 	tp := jira.BasicAuthTransport{
-		Username: username,
-		Password: apiToken,
+		Username: j.userName,
+		Password: j.apiToken,
 	}
 
-	client, err := jira.NewClient(tp.Client(), jiraDomain)
+	client, err := jira.NewClient(tp.Client(), j.endpoint)
 	if err != nil {
 		log.Fatalf("Error creating JIRA client: %v", err)
 	}
 
 	// JQL query to fetch your tickets. Customize this query as needed.
-	jql := fmt.Sprintf("assignee = %s AND status != Closed ORDER BY created DESC", username)
+	jql := fmt.Sprintf(`assignee = "%s" AND status != Closed ORDER BY created DESC`, j.userName)
 
 	issues, _, err := client.Issue.Search(jql, &jira.SearchOptions{
 		MaxResults: 10, // Adjust the number of results as needed

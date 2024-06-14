@@ -30,7 +30,7 @@ func execute() {
 
 	switch config.EndpointType {
 	case "jira":
-		projectTracking = logwork.NewJira(config.Endpoint, config.Credential)
+		projectTracking = logwork.NewJira(config.Endpoint, config.Username, config.ApiToken)
 	default:
 		fmt.Println("Endpoint type not supported")
 	}
