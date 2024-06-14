@@ -8,7 +8,7 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-  "github.com/TranThang-2804/auto-logwork/internal/configuration"
+  "github.com/TranThang-2804/auto-logwork/cmd/internal/configuration"
 )
 
 // configureCmd represents the configure command
