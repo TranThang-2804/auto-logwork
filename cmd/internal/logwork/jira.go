@@ -1,5 +1,11 @@
 package logwork
 
+import (
+	"time"
+
+	"github.com/TranThang-2804/auto-logwork/pkg/types"
+)
+
 type Jira struct {
   endpoint string
   credential string
@@ -12,14 +18,14 @@ func NewJira(endpoint string, credential string) *Jira {
   }
 }
 
-func (j *Jira) GetTicketToLog() ([]Ticket, error) {
+func (j *Jira) GetTicketToLog(config *types.Config) ([]Ticket, error) {
   return []Ticket{}, nil
 }
 
-func (j *Jira) GetDayToLog() (string, error) {
-  return "", nil
+func (j *Jira) GetDayToLog(config *types.Config) ([]time.Time, error) {
+  return []time.Time{}, nil
 }
 
-func (j *Jira) LogWork(ticket []Ticket, day string) error {
+func (j *Jira) LogWork(config *types.Config, ticket []Ticket, day []time.Time) error {
   return nil
 }
