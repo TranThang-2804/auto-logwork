@@ -20,6 +20,6 @@ func (j *Jira) GetDayToLog() (string, error) {
   return "", nil
 }
 
-func (j *Jira) LogWork(ticket Ticket) error {
+func (j *Jira) LogWork(ticket []Ticket, day string) error {
   return nil
 }
