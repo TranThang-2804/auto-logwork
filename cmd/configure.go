@@ -38,13 +38,13 @@ func configureConfig() error {
 	fmt.Print("Enter credentials: ")
 	credential, _ := reader.ReadString('\n')
 
-  config := &types.Config{
-    EndpointType: endpointType,
-    Endpoint: endpoint,
-    Credential: credential,
-  }
+	config := &types.Config{
+		EndpointType: endpointType,
+		Endpoint:     endpoint,
+		Credential:   credential,
+	}
 
-  err := internal.WriteConfig(config)
+	err := internal.WriteConfig(config)
 
 	return err
 }

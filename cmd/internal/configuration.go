@@ -18,8 +18,8 @@ func CheckConfigExist() (bool, error) {
 }
 
 func GetConfigFilePath() string {
-  homeDir := os.Getenv("HOME")
-  return homeDir + "/" + constant.ConfigFile
+	homeDir := os.Getenv("HOME")
+	return homeDir + "/" + constant.ConfigFile
 }
 
 func ReadConfig() error {
