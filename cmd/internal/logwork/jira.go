@@ -1,6 +1,7 @@
 package logwork
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/TranThang-2804/auto-logwork/pkg/types"
@@ -27,5 +28,6 @@ func (j *Jira) GetDayToLog(config *types.Config) ([]time.Time, error) {
 }
 
 func (j *Jira) LogWork(config *types.Config, ticket []Ticket, day []time.Time) error {
+  fmt.Println("Log work")
   return nil
 }
