@@ -12,7 +12,7 @@ func NewJira(endpoint string, credential string) *Jira {
   }
 }
 
-func (j *Jira) GetAllTicket() ([]Ticket, error) {
+func (j *Jira) GetTicketToLog() ([]Ticket, error) {
   return []Ticket{}, nil
 }
 
