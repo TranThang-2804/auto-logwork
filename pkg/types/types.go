@@ -1,7 +1,7 @@
 package types
 
 type Config struct {
-  credential string
-  endpoint string
-  endpointType string
+  Credential string
+  Endpoint string
+  EndpointType string
 }

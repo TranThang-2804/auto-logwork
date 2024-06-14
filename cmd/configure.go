@@ -4,10 +4,12 @@ Copyright © 2024 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"bufio"
 	"fmt"
-	"log"
+	"os"
 
 	"github.com/TranThang-2804/auto-logwork/cmd/internal"
+	"github.com/TranThang-2804/auto-logwork/pkg/types"
 	"github.com/spf13/cobra"
 )
 
@@ -15,25 +17,36 @@ import (
 var configureCmd = &cobra.Command{
 	Use:   "configure",
 	Short: "config your credentials and tool's endpoint",
-	Long: ``,
+	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
-    configureConfig()
+		configureConfig()
 	},
 }
 
 func configureConfig() error {
-  configFileExist, err := internal.CheckConfigExist()
+	configFileExist, _ := internal.CheckConfigExist()
 
-  if err != nil {
-    log.Fatal(err)
-    return err
+	if configFileExist {
+		fmt.Println("Configuration Exists, Overwrite? [y/n]")
+	}
+
+	reader := bufio.NewReader(os.Stdin)
+	fmt.Print("Enter type: ")
+	endpointType, _ := reader.ReadString('\n')
+	fmt.Print("Enter endpoint: ")
+	endpoint, _ := reader.ReadString('\n')
+	fmt.Print("Enter credentials: ")
+	credential, _ := reader.ReadString('\n')
+
+  config := &types.Config{
+    EndpointType: endpointType,
+    Endpoint: endpoint,
+    Credential: credential,
   }
 
-  if (configFileExist) {
-    fmt.Println("Configuration Exists, Overwrite? [y/n]")
-  }
-  
-  return nil
+  err := internal.WriteConfig(config)
+
+	return err
 }
 
 func init() {
