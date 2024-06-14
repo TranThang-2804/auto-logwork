@@ -34,7 +34,7 @@ func (j *Jira) GetTicketToLog() ([]Ticket, error) {
 	}
 
 	// JQL query to fetch your tickets. Customize this query as needed.
-	jql := fmt.Sprintf(`assignee = "%s" AND status != Closed ORDER BY created DESC`, j.userName)
+	jql := fmt.Sprintf(`assignee = "%s" AND status IN (Resolved, "In Progress", Closed) AND type != Epic ORDER BY created DESC`, j.userName)
 
 	issues, _, err := client.Issue.Search(jql, &jira.SearchOptions{
 		MaxResults: 10, // Adjust the number of results as needed
