@@ -58,7 +58,15 @@ func (j *Jira) GetDayToLog() ([]time.Time, error) {
 	// Calculate the start of the current week (Monday)
   now := time.Now()
 	start := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, time.Local)
-	startOfWeek := start.AddDate(0, 0, -int(now.Weekday())+1) // Adjust according to your week's start day
+  var startOfWeek time.Time
+  
+  // Sunday is 0 -> we need to handle this
+  if now.Weekday().String() == "Sunday" {
+	  startOfWeek = start.AddDate(0, 0, -6) // Adjust according to your week's start day
+  } else {
+	  startOfWeek = start.AddDate(0, 0, -int(now.Weekday()+1)) // Adjust according to your week's start day
+  }
+
   fmt.Println("Start of week: ", startOfWeek)
 
   logworkList := make([]types.LogWorkStatus, 7)
