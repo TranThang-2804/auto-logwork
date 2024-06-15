@@ -56,7 +56,8 @@ func (j *Jira) GetTicketToLog() ([]types.Ticket, error) {
 
 func (j *Jira) GetDayToLog() ([]time.Time, error) {
 	// Calculate the start of the current week (Monday)
-	now := time.Now()
+  now := time.Now()
+	start := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, time.Local)
 	startOfWeek := now.AddDate(0, 0, -int(now.Weekday())+1) // Adjust according to your week's start day
   fmt.Println("Start of week: ", startOfWeek)
 
