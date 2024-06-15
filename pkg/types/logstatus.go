@@ -18,13 +18,13 @@ func (l *LogWorkStatus) New(date time.Time, timeSpent time.Duration) (*LogWorkSt
   }, nil
 }
 
-func (l *LogWorkStatus) Append(date time.Time, timeSpent time.Duration) error {
+func (l *LogWorkStatus) Add(timeSpent time.Duration) error {
   if (l == nil) {
     log.Fatal("LogWorkStatus is nil")
     return errors.New("LogWorkStatus is nil")
   }
-  
-  l.TimeSpent = l.TimeSpent + timeSpent
+
+  l.TimeSpent = time.Duration(l.TimeSpent.Seconds()+ timeSpent.Seconds())
 
   return nil
 } 

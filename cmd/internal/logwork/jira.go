@@ -61,6 +61,8 @@ func (j *Jira) GetDayToLog() ([]time.Time, error) {
 	startOfWeek := start.AddDate(0, 0, -int(now.Weekday())+1) // Adjust according to your week's start day
   fmt.Println("Start of week: ", startOfWeek)
 
+  logworkList := make([]types.LogWorkStatus, 7)
+
 	// JQL query to fetch issues assigned to you
 	jql := fmt.Sprintf(`assignee = "%s" ORDER BY created DESC`, j.userName)
 
@@ -88,10 +90,13 @@ func (j *Jira) GetDayToLog() ([]time.Time, error) {
 			}
 
 			if worklogTime.After(startOfWeek) {
-
-				fmt.Printf("Issue: %s, Time Spent: %s, Started: %s\n", issue.Key, worklog.TimeSpent, string(worklogTimeStarted))
+				logworkList[worklogTime.Weekday()].Add(time.Duration(worklog.TimeSpentSeconds))
 			}
 		}
+	}
+
+	for i := range logworkList {
+		fmt.Printf("Day: %d, Time Spent: %s\n", i, logworkList[i].TimeSpent)
 	}
 
 	return []time.Time{}, nil
