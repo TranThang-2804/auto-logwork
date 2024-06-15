@@ -1,8 +1,11 @@
 package logwork
 
 import (
+	"bufio"
+	"errors"
 	"fmt"
 	"log"
+	"os"
 	"time"
 
 	"github.com/TranThang-2804/auto-logwork/pkg/types"
@@ -129,12 +132,23 @@ func (j *Jira) GetDayToLog() ([]types.LogWorkStatus, error) {
 func (j *Jira) LogWork(ticket []types.Ticket, logworkList []types.LogWorkStatus) error {
 	logActionList, _ := defaultLogWorkAlgorithm(ticket, logworkList)
 
-  fmt.Println("----------------Ticket to log-------------------")
+	fmt.Println("----------------Ticket to log-------------------")
 	for i := range logActionList {
-    fmt.Printf("Ticket ID: %s, Tiket Summary: %s, Time to log: %s, Date to log: %s\n", logActionList[i].TicketToLog.ID, logActionList[i].TicketToLog.Summary, logActionList[i].DateToLog)
+		fmt.Printf("Ticket ID: %s, Tiket Summary: %s, Time to log: %s, Date to log: %s\n", logActionList[i].TicketToLog.ID, logActionList[i].TicketToLog.Summary, logActionList[i].DateToLog)
 	}
 
-    
+	reader := bufio.NewReader(os.Stdin)
+
+	fmt.Print("You sure to start logging work? [y/n]: ")
+	status, _ := reader.ReadString('\n')
+	status = status[:len(status)-1]
+
+	if status == "n" {
+		return nil
+	} else if status != "y" {
+		log.Println("Invalid input")
+		return errors.New("Invalid input, valid input are y/n")
+	}
 
 	return nil
 }
