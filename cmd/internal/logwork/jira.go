@@ -125,7 +125,7 @@ func (j *Jira) GetDayToLog() ([]types.LogWorkStatus, error) {
 	}
 
 	for i := range logworkList {
-		fmt.Printf("Day: %d\tTime Spent: %d Hours\n", i, logworkList[i].TimeSpent/3600)
+    fmt.Printf("%s: Time Spent: %d Hours\n", time.Weekday(i), logworkList[i].TimeSpent/3600)
 	}
 
 	return logworkList, nil
@@ -136,7 +136,7 @@ func (j *Jira) LogWork(ticket []types.Ticket, logworkList []types.LogWorkStatus)
 
 	fmt.Println("----------------Ticket to log-------------------")
 	for i := range logActionList {
-		fmt.Printf("Ticket ID: %s\tTiket Summary: %s\t\tTime to log: %s\tDate to log: %s\n", logActionList[i].TicketToLog.ID, logActionList[i].TicketToLog.Summary, logActionList[i].DateToLog)
+		fmt.Printf("Ticket ID: %s\tTiket Summary: %s\t\tTime to log: %dh\tDate to log: %s\n", logActionList[i].TicketToLog.ID, logActionList[i].TicketToLog.Summary, logActionList[i].TimeToLog/3600, logActionList[i].DateToLog)
 	}
 
 	reader := bufio.NewReader(os.Stdin)
@@ -150,6 +150,22 @@ func (j *Jira) LogWork(ticket []types.Ticket, logworkList []types.LogWorkStatus)
 	} else if status != "y" {
 		log.Println("Invalid input")
 		return errors.New("Invalid input, valid input are y/n")
+	}
+
+	for i := range logActionList {
+		worklog := &jira.WorklogRecord{
+			Started:          (*jira.Time)(&logActionList[i].DateToLog),
+			TimeSpentSeconds: int(logActionList[i].TimeToLog),
+		}
+
+		// Log work to the Jira issue
+		_, response, err := j.client.Issue.AddWorklogRecord(logActionList[i].TicketToLog.ID, worklog)
+		if err != nil {
+			log.Fatalf("Failed to log work: %v", err)
+		}
+		defer response.Body.Close()
+
+    fmt.Printf("Work logged to issue %s: %s successfully.\n", logActionList[i].TicketToLog.ID, logActionList[i].TicketToLog.Summary)
 	}
 
 	return nil
