@@ -40,6 +40,8 @@ func (j *Jira) GetTicketToLog() ([]types.Ticket, error) {
 	// JQL query to fetch your tickets. Customize this query as needed.
 	jql := fmt.Sprintf(`assignee = "%s" AND status IN (Resolved, "In Progress", Closed) AND type != Epic ORDER BY created DESC`, j.userName)
 
+  ticketList := []types.Ticket{}
+
 	issues, _, err := j.client.Issue.Search(jql, &jira.SearchOptions{
 		MaxResults: 10, // Adjust the number of results as needed
 	})
@@ -50,8 +52,12 @@ func (j *Jira) GetTicketToLog() ([]types.Ticket, error) {
 	// Print the fetched issues
 	for _, issue := range issues {
 		fmt.Printf("Issue: %s, Summary: %s, Status: %s\n", issue.Key, issue.Fields.Summary, issue.Fields.Status.Name)
+    ticketList = append(ticketList, types.Ticket{
+      ID: issue.Key,
+      Summary: issue.Fields.Summary,
+    })
 	}
-	return []types.Ticket{}, nil
+	return ticketList, nil
 }
 
 func (j *Jira) GetDayToLog() ([]types.LogWorkStatus, error) {
@@ -111,7 +117,9 @@ func (j *Jira) GetDayToLog() ([]types.LogWorkStatus, error) {
 	return logworkList, nil
 }
 
-func (j *Jira) LogWork(ticket []types.Ticket, day []types.LogWorkStatus) error {
+func (j *Jira) LogWork(ticket []types.Ticket, logworkList []types.LogWorkStatus) error {
+  defaultLogWorkAlgorithm(ticket, logworkList)
+  
   
 	return nil
 }
