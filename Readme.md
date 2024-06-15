@@ -10,7 +10,7 @@ For now, the tool only support for Jira cloud.
 2. Install cli
 run: 
 ```
-go install github.com/TranThang-2804/auto-logwork@latest
+go install github.com/TranThang-2804/auto-logwork
 ```
 
 ### How to use
