@@ -125,7 +125,7 @@ func (j *Jira) GetDayToLog() ([]types.LogWorkStatus, error) {
 	}
 
 	for i := range logworkList {
-		fmt.Printf("Day: %d, Time Spent: %d Hours\n", i, logworkList[i].TimeSpent/3600)
+		fmt.Printf("Day: %d\tTime Spent: %d Hours\n", i, logworkList[i].TimeSpent/3600)
 	}
 
 	return logworkList, nil
@@ -136,7 +136,7 @@ func (j *Jira) LogWork(ticket []types.Ticket, logworkList []types.LogWorkStatus)
 
 	fmt.Println("----------------Ticket to log-------------------")
 	for i := range logActionList {
-		fmt.Printf("Ticket ID: %s, Tiket Summary: %s, Time to log: %s, Date to log: %s\n", logActionList[i].TicketToLog.ID, logActionList[i].TicketToLog.Summary, logActionList[i].DateToLog)
+		fmt.Printf("Ticket ID: %s\tTiket Summary: %s\t\tTime to log: %s\tDate to log: %s\n", logActionList[i].TicketToLog.ID, logActionList[i].TicketToLog.Summary, logActionList[i].DateToLog)
 	}
 
 	reader := bufio.NewReader(os.Stdin)
