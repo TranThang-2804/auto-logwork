@@ -12,31 +12,34 @@ type Jira struct {
 	endpoint string
 	userName string
 	apiToken string
+  client *jira.Client
 }
 
 func NewJira(endpoint string, userName string, apiToken string) *Jira {
-	return &Jira{
-		endpoint:   endpoint,
-    userName:   userName,
-    apiToken:   apiToken,
-	}
-}
-
-func (j *Jira) GetTicketToLog() ([]Ticket, error) {
 	tp := jira.BasicAuthTransport{
-		Username: j.userName,
-		Password: j.apiToken,
+		Username: userName,
+		Password: apiToken,
 	}
 
-	client, err := jira.NewClient(tp.Client(), j.endpoint)
+	client, err := jira.NewClient(tp.Client(), endpoint)
+
 	if err != nil {
 		log.Fatalf("Error creating JIRA client: %v", err)
 	}
 
+	return &Jira{
+		endpoint: endpoint,
+		userName: userName,
+		apiToken: apiToken,
+    client: client,
+	}
+}
+
+func (j *Jira) GetTicketToLog() ([]Ticket, error) {
 	// JQL query to fetch your tickets. Customize this query as needed.
 	jql := fmt.Sprintf(`assignee = "%s" AND status IN (Resolved, "In Progress", Closed) AND type != Epic ORDER BY created DESC`, j.userName)
 
-	issues, _, err := client.Issue.Search(jql, &jira.SearchOptions{
+	issues, _, err := j.client.Issue.Search(jql, &jira.SearchOptions{
 		MaxResults: 10, // Adjust the number of results as needed
 	})
 	if err != nil {
@@ -51,6 +54,43 @@ func (j *Jira) GetTicketToLog() ([]Ticket, error) {
 }
 
 func (j *Jira) GetDayToLog() ([]time.Time, error) {
+	// Calculate the start of the current week (Monday)
+	now := time.Now()
+	startOfWeek := now.AddDate(0, 0, -int(now.Weekday())+1) // Adjust according to your week's start day
+
+	// JQL query to fetch issues assigned to you
+	jql := fmt.Sprintf(`assignee = "%s" ORDER BY created DESC`, j.userName)
+
+	issues, _, err := j.client.Issue.Search(jql, &jira.SearchOptions{
+		MaxResults: 100, // Adjust the number of results as needed
+	})
+	if err != nil {
+		log.Fatalf("Error fetching JIRA issues: %v", err)
+	}
+
+	fmt.Println("Work logs for the current week:")
+	for _, issue := range issues {
+		worklogs, _, err := j.client.Issue.GetWorklogs(issue.Key)
+		if err != nil {
+			log.Printf("Error fetching worklogs for issue %s: %v", issue.Key, err)
+			continue
+		}
+
+		for _, worklog := range worklogs.Worklogs {
+      var worklogTimeStarted []byte
+      worklog.Started.UnmarshalJSON(worklogTimeStarted)
+			worklogTime, err := time.Parse(time.RFC3339, string(worklogTimeStarted))
+			if err != nil {
+				log.Printf("Error parsing worklog time for issue %s: %v", issue.Key, err)
+				continue
+			}
+
+			if worklogTime.After(startOfWeek) {
+				fmt.Printf("Issue: %s, Time Spent: %s, Started: %s\n", issue.Key, worklog.TimeSpent, worklog.Started)
+			}
+		}
+	}
+
 	return []time.Time{}, nil
 }
 
