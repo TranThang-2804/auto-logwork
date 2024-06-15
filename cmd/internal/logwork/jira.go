@@ -40,7 +40,7 @@ func (j *Jira) GetTicketToLog() ([]types.Ticket, error) {
 	// JQL query to fetch your tickets. Customize this query as needed.
 	jql := fmt.Sprintf(`assignee = "%s" AND status IN (Resolved, "In Progress", Closed) AND type != Epic ORDER BY created DESC`, j.userName)
 
-  ticketList := []types.Ticket{}
+	ticketList := []types.Ticket{}
 
 	issues, _, err := j.client.Issue.Search(jql, &jira.SearchOptions{
 		MaxResults: 10, // Adjust the number of results as needed
@@ -52,10 +52,10 @@ func (j *Jira) GetTicketToLog() ([]types.Ticket, error) {
 	// Print the fetched issues
 	for _, issue := range issues {
 		fmt.Printf("Issue: %s, Summary: %s, Status: %s\n", issue.Key, issue.Fields.Summary, issue.Fields.Status.Name)
-    ticketList = append(ticketList, types.Ticket{
-      ID: issue.Key,
-      Summary: issue.Fields.Summary,
-    })
+		ticketList = append(ticketList, types.Ticket{
+			ID:      issue.Key,
+			Summary: issue.Fields.Summary,
+		})
 	}
 	return ticketList, nil
 }
@@ -76,6 +76,15 @@ func (j *Jira) GetDayToLog() ([]types.LogWorkStatus, error) {
 	fmt.Println("Start of week: ", startOfWeek)
 
 	logworkList := make([]types.LogWorkStatus, 7)
+
+	// Create the correct date
+	for i := range logworkList {
+    if i == 0 {
+      logworkList[i].Date = startOfWeek.AddDate(0, 0, 6)
+    } else {
+      logworkList[i].Date = startOfWeek.AddDate(0, 0, i-1)
+    }
+	}
 
 	// JQL query to fetch issues assigned to you
 	jql := fmt.Sprintf(`assignee = "%s" ORDER BY created DESC`, j.userName)
@@ -118,8 +127,7 @@ func (j *Jira) GetDayToLog() ([]types.LogWorkStatus, error) {
 }
 
 func (j *Jira) LogWork(ticket []types.Ticket, logworkList []types.LogWorkStatus) error {
-  defaultLogWorkAlgorithm(ticket, logworkList)
-  
-  
+	defaultLogWorkAlgorithm(ticket, logworkList)
+
 	return nil
 }
