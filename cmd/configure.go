@@ -43,7 +43,7 @@ func configureConfig() error {
 		}
 	}
 
-	fmt.Print("Enter type: ")
+	fmt.Print("Enter type[jira]: ")
 	endpointType, _ := reader.ReadString('\n')
 	endpointType = endpointType[:len(endpointType)-1]
 	fmt.Print("Enter endpoint: ")
