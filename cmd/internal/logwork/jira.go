@@ -5,6 +5,7 @@ import (
 	"log"
 	"time"
 
+	"github.com/TranThang-2804/auto-logwork/pkg/types"
 	"github.com/andygrunwald/go-jira"
 )
 
@@ -35,7 +36,7 @@ func NewJira(endpoint string, userName string, apiToken string) *Jira {
 	}
 }
 
-func (j *Jira) GetTicketToLog() ([]Ticket, error) {
+func (j *Jira) GetTicketToLog() ([]types.Ticket, error) {
 	// JQL query to fetch your tickets. Customize this query as needed.
 	jql := fmt.Sprintf(`assignee = "%s" AND status IN (Resolved, "In Progress", Closed) AND type != Epic ORDER BY created DESC`, j.userName)
 
@@ -50,7 +51,7 @@ func (j *Jira) GetTicketToLog() ([]Ticket, error) {
 	for _, issue := range issues {
 		fmt.Printf("Issue: %s, Summary: %s, Status: %s\n", issue.Key, issue.Fields.Summary, issue.Fields.Status.Name)
 	}
-	return []Ticket{}, nil
+	return []types.Ticket{}, nil
 }
 
 func (j *Jira) GetDayToLog() ([]time.Time, error) {
@@ -94,7 +95,7 @@ func (j *Jira) GetDayToLog() ([]time.Time, error) {
 	return []time.Time{}, nil
 }
 
-func (j *Jira) LogWork(ticket []Ticket, day []time.Time) error {
+func (j *Jira) LogWork(ticket []types.Ticket, day []time.Time) error {
 	fmt.Println("Log work")
 	return nil
 }
