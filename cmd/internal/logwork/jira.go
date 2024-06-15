@@ -54,7 +54,7 @@ func (j *Jira) GetTicketToLog() ([]types.Ticket, error) {
 	return []types.Ticket{}, nil
 }
 
-func (j *Jira) GetDayToLog() ([]time.Time, error) {
+func (j *Jira) GetDayToLog() ([]types.LogWorkStatus, error) {
 	// Calculate the start of the current week (Monday)
 	now := time.Now()
 	start := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, time.Local)
@@ -108,10 +108,10 @@ func (j *Jira) GetDayToLog() ([]time.Time, error) {
 		fmt.Printf("Day: %d, Time Spent: %d Hours\n", i, logworkList[i].TimeSpent/3600)
 	}
 
-	return []time.Time{}, nil
+	return logworkList, nil
 }
 
-func (j *Jira) LogWork(ticket []types.Ticket, day []time.Time) error {
-	fmt.Println("Log work")
+func (j *Jira) LogWork(ticket []types.Ticket, day []types.LogWorkStatus) error {
+  
 	return nil
 }
