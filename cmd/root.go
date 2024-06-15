@@ -30,6 +30,7 @@ import (
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "auto-logwork",
+  Version: "v1.0.0",
 	Short: "Auto logwork so you don't have to do it",
 	Long: `
 Developed by Tommy
