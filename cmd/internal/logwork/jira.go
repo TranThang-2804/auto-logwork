@@ -56,20 +56,20 @@ func (j *Jira) GetTicketToLog() ([]types.Ticket, error) {
 
 func (j *Jira) GetDayToLog() ([]time.Time, error) {
 	// Calculate the start of the current week (Monday)
-  now := time.Now()
+	now := time.Now()
 	start := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, time.Local)
-  var startOfWeek time.Time
-  
-  // Sunday is 0 -> we need to handle this
-  if now.Weekday().String() == "Sunday" {
-	  startOfWeek = start.AddDate(0, 0, -6) // Adjust according to your week's start day
-  } else {
-	  startOfWeek = start.AddDate(0, 0, -int(now.Weekday()+1)) // Adjust according to your week's start day
-  }
+	var startOfWeek time.Time
 
-  fmt.Println("Start of week: ", startOfWeek)
+	// Sunday is 0 -> we need to handle this
+	if now.Weekday().String() == "Sunday" {
+		startOfWeek = start.AddDate(0, 0, -6) // Adjust according to your week's start day
+	} else {
+		startOfWeek = start.AddDate(0, 0, -int(now.Weekday()+1)) // Adjust according to your week's start day
+	}
 
-  logworkList := make([]types.LogWorkStatus, 7)
+	fmt.Println("Start of week: ", startOfWeek)
+
+	logworkList := make([]types.LogWorkStatus, 7)
 
 	// JQL query to fetch issues assigned to you
 	jql := fmt.Sprintf(`assignee = "%s" ORDER BY created DESC`, j.userName)
@@ -82,6 +82,7 @@ func (j *Jira) GetDayToLog() ([]time.Time, error) {
 	}
 
 	fmt.Println("Work logs for the current week:")
+
 	for _, issue := range issues {
 		worklogs, _, err := j.client.Issue.GetWorklogs(issue.Key)
 		if err != nil {
@@ -98,13 +99,13 @@ func (j *Jira) GetDayToLog() ([]time.Time, error) {
 			}
 
 			if worklogTime.After(startOfWeek) {
-				logworkList[worklogTime.Weekday()].Add(time.Duration(worklog.TimeSpentSeconds))
+				logworkList[worklogTime.Weekday()].Add(int64(worklog.TimeSpentSeconds))
 			}
 		}
 	}
 
 	for i := range logworkList {
-		fmt.Printf("Day: %d, Time Spent: %s\n", i, logworkList[i].TimeSpent)
+		fmt.Printf("Day: %d, Time Spent: %d Hours\n", i, logworkList[i].TimeSpent/3600)
 	}
 
 	return []time.Time{}, nil
