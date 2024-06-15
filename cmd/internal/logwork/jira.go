@@ -41,6 +41,7 @@ func NewJira(endpoint string, userName string, apiToken string) *Jira {
 
 func (j *Jira) GetTicketToLog() ([]types.Ticket, error) {
 	// JQL query to fetch your tickets. Customize this query as needed.
+	fmt.Println("----------------Ticket able to log-------------------")
 	jql := fmt.Sprintf(`assignee = "%s" AND status IN (Resolved, "In Progress") AND type != Epic ORDER BY created DESC`, j.userName)
 
 	ticketList := []types.Ticket{}
@@ -76,6 +77,7 @@ func (j *Jira) GetDayToLog() ([]types.LogWorkStatus, error) {
 		startOfWeek = start.AddDate(0, 0, -int(now.Weekday()+1)) // Adjust according to your week's start day
 	}
 
+	fmt.Println("----------------Your week worklog status-------------------")
 	fmt.Println("Start of week: ", startOfWeek)
 
 	logworkList := make([]types.LogWorkStatus, 7)
