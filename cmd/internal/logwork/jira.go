@@ -12,7 +12,7 @@ type Jira struct {
 	endpoint string
 	userName string
 	apiToken string
-  client *jira.Client
+	client   *jira.Client
 }
 
 func NewJira(endpoint string, userName string, apiToken string) *Jira {
@@ -31,7 +31,7 @@ func NewJira(endpoint string, userName string, apiToken string) *Jira {
 		endpoint: endpoint,
 		userName: userName,
 		apiToken: apiToken,
-    client: client,
+		client:   client,
 	}
 }
 
@@ -57,6 +57,7 @@ func (j *Jira) GetDayToLog() ([]time.Time, error) {
 	// Calculate the start of the current week (Monday)
 	now := time.Now()
 	startOfWeek := now.AddDate(0, 0, -int(now.Weekday())+1) // Adjust according to your week's start day
+  fmt.Println("Start of week: ", startOfWeek)
 
 	// JQL query to fetch issues assigned to you
 	jql := fmt.Sprintf(`assignee = "%s" ORDER BY created DESC`, j.userName)
@@ -77,16 +78,15 @@ func (j *Jira) GetDayToLog() ([]time.Time, error) {
 		}
 
 		for _, worklog := range worklogs.Worklogs {
-      var worklogTimeStarted []byte
-      worklog.Started.UnmarshalJSON(worklogTimeStarted)
-			worklogTime, err := time.Parse(time.RFC3339, string(worklogTimeStarted))
+			worklogTimeStarted, _ := worklog.Started.MarshalJSON()
+			worklogTime, err := time.Parse("\"2006-01-02T15:04:05.999-0700\"", string(worklogTimeStarted))
 			if err != nil {
 				log.Printf("Error parsing worklog time for issue %s: %v", issue.Key, err)
 				continue
 			}
 
 			if worklogTime.After(startOfWeek) {
-				fmt.Printf("Issue: %s, Time Spent: %s, Started: %s\n", issue.Key, worklog.TimeSpent, worklog.Started)
+				fmt.Printf("Issue: %s, Time Spent: %s, Started: %s\n", issue.Key, worklog.TimeSpent, string(worklogTimeStarted))
 			}
 		}
 	}
