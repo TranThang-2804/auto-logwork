@@ -74,7 +74,7 @@ func (j *Jira) GetDayToLog() ([]types.LogWorkStatus, error) {
 	if now.Weekday().String() == "Sunday" {
 		startOfWeek = start.AddDate(0, 0, -6) // Adjust according to your week's start day
 	} else {
-		startOfWeek = start.AddDate(0, 0, -int(now.Weekday()+1)) // Adjust according to your week's start day
+		startOfWeek = start.AddDate(0, 0, -int(now.Weekday())+1) // Adjust according to your week's start day
 	}
 
 	fmt.Println("----------------Your week worklog status-------------------")
